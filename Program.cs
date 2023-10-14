@@ -8,11 +8,6 @@ namespace SharedRecognizer
     [System.Runtime.Versioning.SupportedOSPlatform("windows")]
     public class Program  
     {  
-        [DllImport("user32.dll")]
-        static extern UInt32 SendInput(UInt32 nInputs, [MarshalAs(UnmanagedType.LPArray, SizeConst = 1)] INPUT[] pInputs, Int32 cbSize);
-        
-        static IntPtr ptrWin;
-
         public static void Main(string[] args)  
         {  
             // Initialize an instance of the shared recognizer.  
@@ -25,7 +20,6 @@ namespace SharedRecognizer
 
                 // Attach event handlers for recognition events.  
                 recognizer.SpeechRecognized += new EventHandler<SpeechRecognizedEventArgs>(SpeechRecognizedHandler);
-                ptrWin = System.Diagnostics.Process.GetCurrentProcess().Handle;
 
                 Console.ReadLine();
 
@@ -52,5 +46,22 @@ namespace SharedRecognizer
             grammar.Name = "Commands";  
             return grammar;  
         }
+        
+        // Handle the SpeechRecognized event.  
+        public static void SpeechRecognizedHandler(object? sender, SpeechRecognizedEventArgs e)  
+        {  
+            if (e.Result != null)  
+            {  
+                Console.WriteLine("Recognition result = {0}",  e.Result.Text ?? "<no text>");  
+
+                if (e.Result.Text == "Quit")
+                {
+                }
+            }  
+            else  
+            {  
+                Console.WriteLine("No recognition result");  
+            }  
+        }  
     }  
 }
